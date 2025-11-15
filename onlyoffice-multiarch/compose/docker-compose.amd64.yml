@@ -2,10 +2,7 @@ version: '3.8'
 
 services:
   onlyoffice:
-    image: onlyoffice:amd64
-    build:
-      context: ../docker/onlyoffice
-      dockerfile: Dockerfile
+    image: docserver:amd64
     ports:
       - "80:80"
       - "443:443"
