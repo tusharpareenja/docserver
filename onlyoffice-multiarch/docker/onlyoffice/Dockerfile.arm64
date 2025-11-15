@@ -13,13 +13,16 @@ COPY ../../configs/rabbitmq/rabbitmq.conf /etc/rabbitmq/rabbitmq.conf
 COPY ../../configs/postgres/postgres.conf /etc/postgres/postgres.conf
 COPY ../../configs/redis/redis.conf /etc/redis/redis.conf
 
-# Create an entrypoint script to patch nginx config at runtime
-COPY ../../scripts/entrypoint.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh
+# Patch nginx config to allow external access to /info/ endpoint
+# The base image installs nginx, so we patch the config after FROM
+RUN if [ -f /etc/nginx/includes/ds-docservice.conf ]; then \
+      sed -i 's/^  allow 127\.0\.0\.1;$/  # allow 127.0.0.1;/g' /etc/nginx/includes/ds-docservice.conf && \
+      sed -i 's/^  deny all;$/  # deny all;/g' /etc/nginx/includes/ds-docservice.conf && \
+      echo "✓ nginx config patched to allow /info/ access"; \
+    else \
+      echo "⚠ Warning: nginx config not found"; \
+    fi
 
 # Expose necessary ports
 EXPOSE 80
 EXPOSE 443
-
-# Use custom entrypoint to patch nginx before starting
-ENTRYPOINT ["/entrypoint.sh"]
