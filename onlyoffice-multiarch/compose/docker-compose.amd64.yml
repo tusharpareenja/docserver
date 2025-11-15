@@ -1,0 +1,58 @@
+version: '3.8'
+
+services:
+  onlyoffice:
+    image: onlyoffice:amd64
+    build:
+      context: ../docker/onlyoffice
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - onlyoffice_data:/var/www/onlyoffice/Data
+      - onlyoffice_logs:/var/log/onlyoffice
+    environment:
+      - DB_TYPE=postgres
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_USER=onlyoffice
+      - DB_PASSWORD=your_password
+      - REDIS_HOST=redis
+      - RABBITMQ_HOST=rabbitmq
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    environment:
+      - RABBITMQ_DEFAULT_USER=user
+      - RABBITMQ_DEFAULT_PASS=password
+
+  postgres:
+    image: postgres:latest
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=onlyoffice
+      - POSTGRES_PASSWORD=your_password
+      - POSTGRES_DB=onlyoffice
+
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+
+volumes:
+  onlyoffice_data:
+  onlyoffice_logs:
+  rabbitmq_data:
+  postgres_data:
+  redis_data:

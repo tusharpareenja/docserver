@@ -1,0 +1,19 @@
+FROM onlyoffice/documentserver:latest
+
+# Install any architecture-specific dependencies here
+RUN apt-get update && apt-get install -y \
+    some-arm64-specific-package \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy configuration files
+COPY ../../configs/onlyoffice/local.json /etc/onlyoffice/local.json
+COPY ../../configs/rabbitmq/rabbitmq.conf /etc/rabbitmq/rabbitmq.conf
+COPY ../../configs/postgres/postgres.conf /etc/postgres/postgres.conf
+COPY ../../configs/redis/redis.conf /etc/redis/redis.conf
+
+# Expose necessary ports
+EXPOSE 80
+EXPOSE 443
+
+# Start OnlyOffice Document Server
+CMD ["bash", "/usr/local/bin/start.sh"]
