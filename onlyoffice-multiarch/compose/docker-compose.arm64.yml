@@ -23,12 +23,18 @@ services:
 
   postgres:
     image: postgres:latest
+    # For Postgres 18+ the recommended mountpoint is /var/lib/postgresql
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql
     environment:
       POSTGRES_DB: "onlyoffice"
       POSTGRES_USER: "onlyoffice"
       POSTGRES_PASSWORD: "your_password"
+    healthcheck:
+      test: ["CMD-SHELL","pg_isready -U onlyoffice -d onlyoffice"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
 
   rabbitmq:
     image: rabbitmq:management
