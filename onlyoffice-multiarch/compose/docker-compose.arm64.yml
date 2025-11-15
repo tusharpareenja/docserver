@@ -2,7 +2,8 @@ version: '3.8'
 
 services:
   onlyoffice:
-    image: docserver:arm64
+    image: onlyoffice/documentserver:latest
+    # Don't build custom image, just use official
     ports:
       - "8000:80"
       - "8443:443"
