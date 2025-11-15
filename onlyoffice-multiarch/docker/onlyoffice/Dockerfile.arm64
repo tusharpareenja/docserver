@@ -13,10 +13,6 @@ COPY ../../configs/rabbitmq/rabbitmq.conf /etc/rabbitmq/rabbitmq.conf
 COPY ../../configs/postgres/postgres.conf /etc/postgres/postgres.conf
 COPY ../../configs/redis/redis.conf /etc/redis/redis.conf
 
-# Patch nginx config to allow external access to /info/ endpoint
-# Simple approach: just comment out the "deny all;" line in the /info/ location block
-RUN sed -i '/location ~\* ^(\/\[0-9\]\+/,/^}/s/^  deny all;$/  # deny all;/' /etc/nginx/includes/ds-docservice.conf 2>/dev/null || true
-
 # Expose necessary ports
 EXPOSE 80
 EXPOSE 443
