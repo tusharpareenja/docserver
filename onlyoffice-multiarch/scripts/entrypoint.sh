@@ -15,6 +15,7 @@ else
   echo "  Proceeding without patching..."
 fi
 
-# Run the original OnlyOffice entrypoint/startup script
+# Run the original OnlyOffice startup command
+# The official image uses /bin/bash with a complex startup script
 echo "Starting OnlyOffice DocumentServer..."
-exec /app/ds/run-documentserver
+exec /bin/bash /usr/local/bin/ds.run
