@@ -9,9 +9,10 @@ RUN apt-get update && apt-get install -y \
 # Set up OnlyOffice Document Server
 COPY ./configs/onlyoffice/local.json /etc/onlyoffice/local.json
 
-# Override nginx config to allow external access to /info/ and /internal/
-# Copy a patched version that removes the restrictive allow 127.0.0.1; deny all; rules
-COPY ./configs/nginx/ds-docservice.conf /etc/nginx/includes/ds-docservice.conf
+# Patch nginx config to allow external access to /info/ endpoint
+# Use a targeted sed to only modify the /info/ location block (change "deny all;" to "# deny all;")
+RUN sed -i '/location ~\* ^(\/\[\\d\]\+\\./ { /info/ { s/^  deny all;$/  # deny all;/ } }' /etc/nginx/includes/ds-docservice.conf || \
+    echo "Note: nginx patch may need to be applied at runtime if file doesn't exist yet"
 
 # Expose necessary ports
 EXPOSE 80 443
