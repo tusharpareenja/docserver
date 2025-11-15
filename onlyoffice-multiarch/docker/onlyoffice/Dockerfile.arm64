@@ -16,6 +16,3 @@ COPY ../../configs/redis/redis.conf /etc/redis/redis.conf
 # Expose necessary ports
 EXPOSE 80
 EXPOSE 443
-
-# Start OnlyOffice DocumentServer web service
-CMD ["/app/ds/run-document-server.sh"]
