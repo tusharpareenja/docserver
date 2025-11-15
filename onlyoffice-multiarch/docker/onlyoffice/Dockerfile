@@ -10,9 +10,8 @@ RUN apt-get update && apt-get install -y \
 COPY ./configs/onlyoffice/local.json /etc/onlyoffice/local.json
 
 # Patch nginx config to allow external access to /info/ endpoint
-# Use a targeted sed to only modify the /info/ location block (change "deny all;" to "# deny all;")
-RUN sed -i '/location ~\* ^(\/\[\\d\]\+\\./ { /info/ { s/^  deny all;$/  # deny all;/ } }' /etc/nginx/includes/ds-docservice.conf || \
-    echo "Note: nginx patch may need to be applied at runtime if file doesn't exist yet"
+# Simple approach: just comment out the "deny all;" line in the /info/ location block
+RUN sed -i '/location ~\* ^(\/\[0-9\]\+/,/^}/s/^  deny all;$/  # deny all;/' /etc/nginx/includes/ds-docservice.conf 2>/dev/null || true
 
 # Expose necessary ports
 EXPOSE 80 443
