@@ -31,12 +31,18 @@ services:
 
   postgres:
     image: postgres:latest
+    # For Postgres 18+ mount the whole /var/lib/postgresql so versioned subdirs work
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql
     environment:
       - POSTGRES_USER=onlyoffice
       - POSTGRES_PASSWORD=onlyoffice
       - POSTGRES_DB=onlyoffice
+    healthcheck:
+      test: ["CMD-SHELL","pg_isready -U onlyoffice -d onlyoffice"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
 
   redis:
     image: redis:latest
