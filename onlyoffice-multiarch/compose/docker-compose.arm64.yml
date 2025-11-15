@@ -2,10 +2,7 @@ version: '3.8'
 
 services:
   onlyoffice:
-    image: docserver:arm64
-    build:
-      context: ..
-      dockerfile: docker/onlyoffice/Dockerfile.arm64
+    image: onlyoffice/documentserver:latest
     ports:
       - "8000:80"
       - "8443:443"
